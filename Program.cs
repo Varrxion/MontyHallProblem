@@ -1,4 +1,4 @@
-﻿//This program is created with the intention of proving whether it is truly better to switch your door/choice in the monty hall problem, statistically.
+//This program is created with the intention of proving whether it is truly better to switch your door/choice in the monty hall problem, statistically.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace MontyHallProblem
         static void Main(string[] args)
         {
             const int NUMTESTS = 10000;
+            const int NUMDOORS = 3;
 
             Random random = new Random();
 
@@ -24,6 +25,8 @@ namespace MontyHallProblem
             int wins = 0;
 
             int choice = 0;
+
+            Console.WriteLine($"There are {NUMDOORS} doors.");
 
             while (validchoice == false)
             {
@@ -41,10 +44,10 @@ namespace MontyHallProblem
             {
                 while (counter <= NUMTESTS)
                 {
-                    randnum = random.Next(3);
-                    winningnum = random.Next(3);
+                    randnum = random.Next(NUMDOORS);
+                    winningnum = random.Next(NUMDOORS);
 
-                    if (randnum == winningnum)
+                    if (randnum == winningnum) //keep our choice and see if it wins
                     {
                         wins++;
                     }
@@ -54,17 +57,26 @@ namespace MontyHallProblem
             }
             else if(choice == 2)
             {
+                int goatnum;
                 int firstnum;
                 while (counter <= NUMTESTS)
                 {
-                    randnum = random.Next(3);
-                    winningnum = random.Next(3);
+                    randnum = random.Next(NUMDOORS);
+                    winningnum = random.Next(NUMDOORS);
                     firstnum = randnum; //The number initially picked
 
-                    while (randnum == firstnum) //keep rolling randnum until it isn't the same as the firt choice, to simulate randomly picking a different door
+                    while ((randnum == firstnum) || randnum==winningnum) //keep rolling randnum until it isn't the same as the first choice, and isn't the same number as the winning door (Monty showing one of the goats)
                     {
-                        randnum=random.Next(3);
+                        randnum=random.Next(NUMDOORS);
                     }
+
+                    goatnum = randnum; //mark this as known goat door
+
+                    while ((randnum == firstnum) || randnum == goatnum) //keep rolling randnum until it isn't the same as the first choice, and isn't the same number as the goat door (Player switching their choice)
+                    {
+                        randnum = random.Next(NUMDOORS);
+                    }
+
                     if (randnum == winningnum) //When different number found, see if that number matches the winning number
                     {
                         wins++;
